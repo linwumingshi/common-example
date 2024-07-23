@@ -25,9 +25,6 @@ jobs:
             exit 0
           fi
 
-      - name: Install Project Dependencies
-        run: mvn install
-
       - name: Download Plugin Artifact
         uses: actions/download-artifact@v4
         with:
@@ -36,6 +33,7 @@ jobs:
 
       - name: Unpack Plugin Artifact
         run: unzip ~/.m2/repository/plugin-artifact.zip -d ~/.m2/repository/com/github/linwumingshi
+
 
       - name: Run Maven to Generate API Docs with Plugin Dependencies
         id: generate-docs

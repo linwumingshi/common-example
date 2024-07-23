@@ -30,6 +30,8 @@ jobs:
         with:
           name: smart-doc-source
           path: ~/.m2/repository
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Unpack Plugin Artifact
         run: unzip ~/.m2/repository/smart-doc-source.zip -d ~/.m2/repository

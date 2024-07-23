@@ -25,37 +25,19 @@ jobs:
             exit 0
           fi
 
-      - name: Set Maven Local Repository Path for Plugin Dependencies
-        run: echo "MAVEN_OPTS='-Dmaven.repo.local=$GITHUB_WORKSPACE/.m2/repository-plugin'" >> $GITHUB_ENV
+      - name: Install Project Dependencies
+        run: mvn install
 
       - name: Download Plugin Artifact
         uses: actions/download-artifact@v4
         with:
           name: plugin-artifact
-          path: .m2/repository-plugin
+          path: ~/.m2/repository
 
       - name: Unpack Plugin Artifact
-        run: unzip .m2/repository-plugin/plugin-artifact.zip -d .m2/repository-plugin
+        run: unzip ~/.m2/repository/plugin-artifact.zip -d ~/.m2/repository/com/github/linwumingshi
 
       - name: Run Maven to Generate API Docs with Plugin Dependencies
         id: generate-docs
         run: |
           mvn -DskipTests=true clean package
-
-      - name: Determine Status
-        id: determine-status
-        run: |
-          if [ "${{ steps.generate-docs.outcome }}" == "success" ]; then
-            echo "status=success" >> $GITHUB_ENV
-          else
-            echo "status=failure" >> $GITHUB_ENV
-
-      - name: Trigger Completion Workflow in Repo Smart Doc
-        if: always()
-        run: |
-          curl -X POST -H "Accept: application/vnd.github.v3+json" \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -d "{\"event_type\": \"docs-generation-complete\", \"client_payload\": {\"status\": \"$STATUS\", \"run_id\": \"${{ github.event.client_payload.run_id }}\", \"repo\": \"${{ github.event.client_payload.repo }}\"}}" \
-          https://api.github.com/repos/${{ github.event.client_payload.repo }}/dispatches
-        env:
-          STATUS: ${{ env.status }}

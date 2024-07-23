@@ -32,8 +32,10 @@ jobs:
           path: ~/.m2/repository
 
       - name: Unpack Plugin Artifact
-        run: unzip ~/.m2/repository/smart-doc-source.zip -d ~/.m2/repository/com/github/linwumingshi
+        run: unzip ~/.m2/repository/smart-doc-source.zip -d ~/.m2/repository
 
+      - name: Install Project Dependencies
+        run: mvn install
 
       - name: Run Maven to Generate API Docs with Plugin Dependencies
         id: generate-docs

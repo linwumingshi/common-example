@@ -28,11 +28,11 @@ jobs:
       - name: Download Plugin Artifact
         uses: actions/download-artifact@v4
         with:
-          name: plugin-artifact
+          name: smart-doc-source
           path: ~/.m2/repository
 
       - name: Unpack Plugin Artifact
-        run: unzip ~/.m2/repository/plugin-artifact.zip -d ~/.m2/repository/com/github/linwumingshi
+        run: unzip ~/.m2/repository/smart-doc-source.zip -d ~/.m2/repository/com/github/linwumingshi
 
 
       - name: Run Maven to Generate API Docs with Plugin Dependencies

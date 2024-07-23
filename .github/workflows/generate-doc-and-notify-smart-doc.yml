@@ -34,6 +34,9 @@ jobs:
           name: plugin-artifact
           path: .m2/repository-plugin
 
+      - name: Unpack Plugin Artifact
+        run: unzip .m2/repository-plugin/plugin-artifact.zip -d .m2/repository-plugin
+
       - name: Run Maven to Generate API Docs with Plugin Dependencies
         id: generate-docs
         run: |

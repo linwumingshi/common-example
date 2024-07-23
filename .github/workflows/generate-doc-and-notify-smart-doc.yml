@@ -12,12 +12,6 @@ jobs:
       - name: Checkout Example Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
       - name: Verify Repository
         run: |
           if [ "${{ github.event.repository.full_name }}" != "linwumingshi/common" ]; then
@@ -25,14 +19,17 @@ jobs:
             exit 0
           fi
 
-      - name: Download Plugin Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: smart-doc-source
-          path: ~/.m2/repository
+      - name: Download Artifact
+        run: |
+          curl -L -o smart-doc-source.zip "${{ github.event.client_payload.artifact_url }}"
+          unzip smart-doc-source.zip -d ~/.m2/repository/com/github/linwumingshi
 
-      - name: Unpack Plugin Artifact
-        run: unzip ~/.m2/repository/smart-doc-source.zip -d ~/.m2/repository
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
 
       - name: Install Project Dependencies
         run: mvn install

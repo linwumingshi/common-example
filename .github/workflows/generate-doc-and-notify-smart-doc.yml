@@ -19,9 +19,13 @@ jobs:
             exit 0
           fi
 
-      - name: Download Artifact
+      - name: Download a Build Artifact
+        uses: indiesdev/curl@v1.1
+        with:
+          curl-url: "${{ github.event.client_payload.artifact_url }}"
+
+      - name: unzip Artifact
         run: |
-          curl -L -o smart-doc-source.zip  -H "Authorization: token $GITHUB_TOKEN" "${{ github.event.client_payload.artifact_url }}"
           unzip smart-doc-source.zip -d ~/.m2/repository/com/github/linwumingshi
 
       - name: Set up JDK 11

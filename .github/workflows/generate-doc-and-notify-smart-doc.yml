@@ -21,7 +21,7 @@ jobs:
 
       - name: Download Artifact
         run: |
-          curl -L -o smart-doc-source.zip "${{ github.event.client_payload.artifact_url }}"
+          curl -L -o smart-doc-source.zip  -H "Authorization: token $GITHUB_TOKEN" "${{ github.event.client_payload.artifact_url }}"
           unzip smart-doc-source.zip -d ~/.m2/repository/com/github/linwumingshi
 
       - name: Set up JDK 11

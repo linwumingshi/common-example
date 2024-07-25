@@ -56,7 +56,7 @@ jobs:
       - name: Unzip Artifact
         run: |
           echo "Unzipping artifact..."
-          unzip -d ~/.m2/repository/com/ly/smart-doc ~/.m2/repository/com/ly/smart-doc/smart-doc-source.zip || (echo "Unzip failed, printing file content:" && cat ~/.m2/repository/com/ly/smart-doc/smart-doc-source.zip && exit 1)
+          unzip -d ~/.m2/repository/com/ly/smart-doc ~/.m2/repository/com/ly/smart-doc/smart-doc-source.zip || (echo "Unzip failed" && exit 1)
           ls -lh ~/.m2/repository/com/ly/smart-doc
 
       - name: Build and Install Plugin

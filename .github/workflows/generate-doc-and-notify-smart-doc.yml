@@ -28,7 +28,20 @@ jobs:
           echo "File size:"
           ls -lh smart-doc-source.zip
 
+      - name: Checkout Plugin Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
       - name: Unzip Artifact
         run: |
           echo "Unzipping artifact..."
           unzip -d ~/.m2/repository/com/github/linwumingshi smart-doc-source.zip || (echo "Unzip failed, printing file content:" && cat smart-doc-source.zip && exit 1)
+
+
+      - name: Build and Install Plugin
+        run: mvn install

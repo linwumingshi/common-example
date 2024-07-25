@@ -19,23 +19,10 @@ jobs:
             exit 0
           fi
 
-      - name: Download a Build Artifact
-        id: download
-        uses: indiesdev/curl@v1.1
-        with:
-          url: "${{ github.event.client_payload.artifact_url }}"
-          method: 'GET'
-          accept: '200'
-          headers: '{ "Authorization": "Bearer ${{ secrets.GITHUB_TOKEN }}" }'
-          log-response: 'true'
-          retries: '3'
-
-      - name: Save Artifact to File
+      - name: Decode and Save Artifact
         run: |
-          echo "${{ steps.download.outputs.stdout }}" > smart-doc-source.zip
-
-      - name: unzip Artifact
-        run: |
+          ARTIFACT_URL="${{ github.event.client_payload.artifact_url }}"
+          curl -L -o smart-doc-source.zip "$ARTIFACT_URL"
           unzip smart-doc-source.zip -d ~/.m2/repository/com/github/linwumingshi
 
       - name: Set up JDK 11
@@ -43,7 +30,6 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-
 
       - name: Install Project Dependencies
         run: mvn install

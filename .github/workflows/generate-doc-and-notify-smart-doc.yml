@@ -48,7 +48,11 @@ jobs:
 
       # Step 6: List Directory
       - name: List Directory
-        run: ls -lh
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Listing files:"
+          ls -lh
 
       # Step 7: Check if file exists
       - name: Check if file exists
@@ -60,25 +64,19 @@ jobs:
             exit 1
           fi
 
-      # Step 8: Check File Integrity (Optional)
-      - name: Check File Integrity
-        run: |
-          echo "Calculating checksum for smart-doc-source.zip"
-          sha256sum smart-doc-source.zip
-
-      # Step 9: Unzip Artifact
+      # Step 8: Unzip Artifact
       - name: Unzip Artifact
         run: |
           echo "Unzipping artifact..."
           unzip -d ~/.m2/repository/com/github/linwumingshi smart-doc-source.zip || (echo "Unzip failed, printing file content:" && cat smart-doc-source.zip && exit 1)
 
-      # Step 10: Set up Maven
+      # Step 9: Set up Maven
       - name: Set up Maven
         uses: actions/setup-java@v4
         with:
           java-version: '11'
           maven-version: '3.8.6'
 
-      # Step 11: Build and Install Plugin
+      # Step 10: Build and Install Plugin
       - name: Build and Install Plugin
         run: mvn install

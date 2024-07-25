@@ -1,25 +1,15 @@
-name: Generate API Docs When Smart Doc PR With Local And Notify Smart Doc Status
+name: Run Plugin
 
 on:
   repository_dispatch:
     types: [run-plugin]
 
 jobs:
-  generate-docs-plugin:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Example Repository
-        uses: actions/checkout@v4
-
-      - name: Verify Repository
-        run: |
-          if [ "${{ github.event.repository.full_name }}" != "linwumingshi/common" ]; then
-            echo "This event is not from a trusted source."
-            exit 0
-          fi
-
-      - name: Decode and Save Artifact
+      - name: Download and Extract Artifact
         run: |
           ARTIFACT_URL="${{ github.event.client_payload.artifact_url }}"
           curl -L -o smart-doc-source.zip "$ARTIFACT_URL"
@@ -31,10 +21,6 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Install Project Dependencies
-        run: mvn install
-
-      - name: Run Maven to Generate API Docs with Plugin Dependencies
-        id: generate-docs
+      - name: Use Plugin
         run: |
-          mvn -DskipTests=true clean package
+          mvn install:install-file -Dfile=~/.m2/repository/com/github/linwumingshi/smart-doc-source/your-plugin.jar -DgroupId=com.github.linwumingshi -DartifactId=your-plugin -Dversion=1.0.0 -Dpackaging=jar

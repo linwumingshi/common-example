@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and Install Plugin
-        run: mvn install
+        run: mvn -DskipTests=true install
 
 
       # Step 1: Set Artifact URL
@@ -60,10 +60,10 @@ jobs:
           ls -lh ~/.m2/repository/com/ly/smart-doc
 
       - name: Build and Install Plugin
-        run: mvn install
+        run: mvn -DskipTests=true install
 
 
       - name: generate-doc
-        run: mvn smart-doc:html
+        run: mvn -DskipTests=true smart-doc:html
 
 

@@ -5,35 +5,25 @@ on:
     types: [run-plugin]
 
 jobs:
-  build:
+  use-artifact:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download and Inspect Artifact
+      - name: Set Artifact URL
         run: |
-          ARTIFACT_URL="${{ github.event.client_payload.artifact_url }}"
-          echo "Downloading artifact from $ARTIFACT_URL"
-          curl -L -o smart-doc-source.zip "$ARTIFACT_URL"
+          ARTIFACT_ID="${{ github.event.client_payload.artifact_id }}"
+          ARTIFACT_URL="https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ARTIFACT_ID}/zip"
+          echo "artifact_url=$ARTIFACT_URL" >> $GITHUB_ENV
+
+      - name: Download Artifact
+        run: |
+          echo "Downloading artifact from ${{ env.artifact_url }}"
+          curl -L -o smart-doc-source.zip -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.artifact_url }}"
           echo "File details:"
           file smart-doc-source.zip
           echo "File size:"
           ls -lh smart-doc-source.zip
 
-      - name: Check File Content
-        run: |
-          echo "First few bytes of the file:"
-          head -c 100 smart-doc-source.zip | xxd
-
-      - name: Extract Artifact
+      - name: Unzip Artifact
         run: |
           unzip smart-doc-source.zip -d ~/.m2/repository/com/github/linwumingshi || (echo "Unzip failed, printing file content:" && cat smart-doc-source.zip && exit 1)
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: Use Plugin
-        run: |
-          mvn install:install-file -Dfile=~/.m2/repository/com/github/linwumingshi/smart-doc-source/your-plugin.jar -DgroupId=com.github.linwumingshi -DartifactId=your-plugin -Dversion=1.0.0 -Dpackaging=jar

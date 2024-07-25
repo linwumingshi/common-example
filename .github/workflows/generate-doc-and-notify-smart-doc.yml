@@ -44,3 +44,4 @@ jobs:
         run: |
           echo "Unzipping artifact..."
           unzip -d ~/.m2/repository/com/github/linwumingshi ~/.m2/repository/com/github/linwumingshi/smart-doc-source.zip || (echo "Unzip failed, printing file content:" && cat ~/.m2/repository/com/github/linwumingshi/smart-doc-source.zip && exit 1)
+          ls -lh ~/.m2/repository/com/github/linwumingshi

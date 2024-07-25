@@ -30,6 +30,11 @@ jobs:
           file smart-doc-source.zip
           echo "File size:"
           ls -lh smart-doc-source.zip
+          mkdir -p ~/.m2/repository/com/github/linwumingshi
+          mv smart-doc-source.zip ~/.m2/repository/com/github/linwumingshi/
+          echo "Unzipping artifact..."
+          unzip -d ~/.m2/repository/com/github/linwumingshi smart-doc-source.zip || (echo "Unzip failed, printing file content:" && cat smart-doc-source.zip && exit 1)
+
 
       # Step 3: Checkout Plugin Repository
       - name: Checkout Plugin Repository

@@ -25,6 +25,7 @@ jobs:
         run: |
           echo "Downloading artifact from ${{ env.artifact_url }}"
           curl -L -o smart-doc-source.zip -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.artifact_url }}"
+          echo "Download status: $?"
           echo "File details:"
           file smart-doc-source.zip
           echo "File size:"
@@ -45,7 +46,11 @@ jobs:
       - name: Create Directory for Unzipping
         run: mkdir -p ~/.m2/repository/com/github/linwumingshi
 
-      # Step 6: Check if file exists
+      # Step 6: List Directory
+      - name: List Directory
+        run: ls -lh
+
+      # Step 7: Check if file exists
       - name: Check if file exists
         run: |
           if [ -f smart-doc-source.zip ]; then
@@ -55,23 +60,25 @@ jobs:
             exit 1
           fi
 
-      # Step 7: List directory
-      - name: List directory
-        run: ls -lh
+      # Step 8: Check File Integrity (Optional)
+      - name: Check File Integrity
+        run: |
+          echo "Calculating checksum for smart-doc-source.zip"
+          sha256sum smart-doc-source.zip
 
-      # Step 8: Unzip Artifact
+      # Step 9: Unzip Artifact
       - name: Unzip Artifact
         run: |
           echo "Unzipping artifact..."
           unzip -d ~/.m2/repository/com/github/linwumingshi smart-doc-source.zip || (echo "Unzip failed, printing file content:" && cat smart-doc-source.zip && exit 1)
 
-      # Step 9: Set up Maven
+      # Step 10: Set up Maven
       - name: Set up Maven
         uses: actions/setup-java@v4
         with:
           java-version: '11'
           maven-version: '3.8.6'
 
-      # Step 10: Build and Install Plugin
+      # Step 11: Build and Install Plugin
       - name: Build and Install Plugin
         run: mvn install

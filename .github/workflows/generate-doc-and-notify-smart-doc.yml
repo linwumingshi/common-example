@@ -12,7 +12,12 @@ jobs:
       - name: Set Artifact URL
         run: |
           ARTIFACT_ID="${{ github.event.client_payload.artifact_id }}"
-          ARTIFACT_URL="https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ARTIFACT_ID}/zip"
+          if [ -z "$ARTIFACT_ID" ]; then
+            echo "Error: ARTIFACT_ID is not set."
+            exit 1
+          fi
+          # Explicitly specify the A repository for artifact download
+          ARTIFACT_URL="https://api.github.com/repos/linwumingshi/common/actions/artifacts/${ARTIFACT_ID}/zip"
           echo "artifact_url=$ARTIFACT_URL" >> $GITHUB_ENV
 
       - name: Download Artifact

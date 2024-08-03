@@ -30,7 +30,7 @@ jobs:
             echo "Error: ARTIFACT_ID is not set."
             exit 1
           fi
-          ARTIFACT_URL="https://api.github.com/repos/linwumingshi/common/actions/artifacts/${ARTIFACT_ID}/zip"
+          ARTIFACT_URL="https://api.github.com/repos/Test0222/common/actions/artifacts/${ARTIFACT_ID}/zip"
           echo "artifact_url=$ARTIFACT_URL" >> $GITHUB_ENV
 
       # Step 2: Download Artifact
